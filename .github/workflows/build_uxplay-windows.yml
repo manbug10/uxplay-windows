@@ -2,7 +2,7 @@ name: build uxplay for windows
 on:
   workflow_dispatch:
     inputs:
-      bonjour_sdk_url:
+      bonjour_sdk_url: https://drive.usercontent.google.com/download?id=1u6XeIRph0ajDB5o5EMZzkpolYQZ4UCMI&export=download&authuser=0&confirm=t&uuid=5b398b79-64dc-4902-b9b1-286be455d14d&at=AO7h07dLRExoSiTTAv4vwxxXleCC:1724291188372
         description: "Direct URL to BonjourSDKSetup.exe v3.0. Download from https://developer.apple.com/bonjour and upload it somewhere"
         default: ""
         required: true
