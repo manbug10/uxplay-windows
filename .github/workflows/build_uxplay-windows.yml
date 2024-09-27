@@ -4,7 +4,7 @@ on:
     inputs:
       bonjour_sdk_url:
         description: "Direct URL to BonjourSDKSetup.exe v3.0. Download from https://developer.apple.com/bonjour and upload it somewhere"
-        default: "https://download937.mediafire.com/9ah99i7sl4ogHh1QSwLN4dtLMUQLGn4G3W-iiaX6on0dnuXPAfLY6l8UHpKyqhU4eZh5FCKOcw1RIJDkf-E8fLIhsrQZjdgg6zNnC3oQcKaKU9-5l8lYwyJZqfFqDy8WxIRUr5tyeF0msol4j32_bVpbNJwMxVjuUcw01xhN8sLS/sgsmouclou5bgay/bonjoursdksetup.exe"
+        default: "https://github.com/manbug10/uxplay-windows/blob/main/bonjoursdksetup.exe"
         required: true
         type: string
 
