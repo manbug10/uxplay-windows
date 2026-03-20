@@ -60,6 +60,13 @@ jobs:
       - name: compiling uxplay (finally)
         shell: msys2 {0}
         run: |
+          # Get the latest version tag from the UxPlay repository
+          cd /tmp
+          git clone --depth 1 --branch $(git ls-remote --tags https://github.com/FDH2/UxPlay | grep -oE 'refs/tags/[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | sed 's|refs/tags/||') UxPlay-src 2>/dev/null || git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src
+          UXPLAY_VERSION=$(cd UxPlay-src && git describe --tags --always 2>/dev/null || echo "latest")
+          echo "UXPLAY_VERSION=$UXPLAY_VERSION" >> $GITHUB_ENV
+          
+          cd /d/a/uxplay-windows/uxplay-windows
           git clone https://github.com/FDH2/UxPlay && cd UxPlay
           mkdir build && cd build
           cmake ..
@@ -135,7 +142,7 @@ jobs:
           cp D:\a\uxplay-windows\uxplay-windows\icon.ico D:\a\uxplay-windows\uxplay-windows\dist\uxplay-windows\_internal
           
       - name: compile the installer with inno setup
-        run: .$(Join-Path -Path ${env:PROGRAMFILES(X86)} -ChildPath 'Inno Setup 6\\ISCC.exe') $(Join-Path -Path $(Get-Location) -ChildPath "script.iss")
+        run: .$(Join-Path -Path ${env:PROGRAMFILES(X86)} -ChildPath 'Inno Setup 6\\ISCC.exe') /DUXPLAY_VERSION="$env:UXPLAY_VERSION" $(Join-Path -Path $(Get-Location) -ChildPath "script.iss")
         
       - name: uploading artifact
         uses: actions/upload-artifact@v4

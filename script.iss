@@ -6,8 +6,12 @@
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
 AppId={{02621F03-7F92-4E33-AA17-017F79B31DCF}
 AppName=uxplay-windows
+#ifdef UXPLAY_VERSION
+AppVersion={#UXPLAY_VERSION}
+#else
 AppVersion=1.72.1-3
-;AppVerName=uxplay-windows 1.72.1-3
+#endif
+;AppVerName=uxplay-windows {#AppVersion}
 AppPublisher=leapbtw
 AppPublisherURL=https://github.com/leapbtw/uxplay-windows
 AppSupportURL=https://github.com/leapbtw/uxplay-windows
