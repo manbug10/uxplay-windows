@@ -149,7 +149,24 @@ jobs:
           cp D:\a\uxplay-windows\uxplay-windows\icon.ico D:\a\uxplay-windows\uxplay-windows\dist\uxplay-windows\_internal
           
       - name: compile the installer with inno setup
-        run: .$(Join-Path -Path ${env:PROGRAMFILES(X86)} -ChildPath 'Inno Setup 6\\ISCC.exe') /DUXPLAY_VERSION="$env:UXPLAY_VERSION" $(Join-Path -Path $(Get-Location) -ChildPath "script.iss")
+        run: |
+          $isccPath = Join-Path ${env:PROGRAMFILES(X86)} 'Inno Setup 6\ISCC.exe'
+          $issFile = Join-Path $(Get-Location) "script.iss"
+          $version = $env:UXPLAY_VERSION
+          
+          if ([string]::IsNullOrEmpty($version)) {
+            Write-Host "Warning: UXPLAY_VERSION is not set, using default version"
+            & $isccPath $issFile
+          } else {
+            Write-Host "Compiling installer with version: $version"
+            & $isccPath /DUXPLAY_VERSION="$version" $issFile
+          }
+          
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Inno Setup compilation failed with exit code $LASTEXITCODE"
+            exit 1
+          }
+        shell: pwsh
         
       - name: uploading artifact
         uses: actions/upload-artifact@v4
