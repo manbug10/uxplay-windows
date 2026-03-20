@@ -13,15 +13,6 @@
 .vscode/
 .idea/
 
-# Build artifacts
-*.o
-*.obj
-*.exe
-*.dll
-*.so
-*.a
-*.out
-
 # Dependencies
 node_modules/
 venv/
@@ -34,11 +25,22 @@ build/
 target/
 .gradle/
 
-# System files
+# OS generated files
 .DS_Store
 Thumbs.db
 
-# Coverage
+# Compiled files
+*.pyc
+*.class
+*.o
+*.exe
+*.dll
+*.so
+*.a
+*.obj
+*.out
+
+# Coverage reports
 coverage/
 htmlcov/
 .coverage

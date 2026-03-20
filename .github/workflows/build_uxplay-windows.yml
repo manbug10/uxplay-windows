@@ -62,9 +62,12 @@ jobs:
         run: |
           # Get the latest version tag from the UxPlay repository
           cd /tmp
-          git clone --depth 1 --branch $(git ls-remote --tags https://github.com/FDH2/UxPlay | grep -oE 'refs/tags/[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -n 1 | sed 's|refs/tags/||') UxPlay-src 2>/dev/null || git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src
-          UXPLAY_VERSION=$(cd UxPlay-src && git describe --tags --always 2>/dev/null || echo "latest")
+          git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src
+          UXPLAY_VERSION=$(cd UxPlay-src && git describe --tags --always --abbrev=0 2>/dev/null || echo "1.73.5")
+          # Remove 'v' prefix if present for cleaner version string
+          UXPLAY_VERSION=$(echo $UXPLAY_VERSION | sed 's/^v//')
           echo "UXPLAY_VERSION=$UXPLAY_VERSION" >> $GITHUB_ENV
+          echo "Detected UxPlay version: $UXPLAY_VERSION"
           
           cd /d/a/uxplay-windows/uxplay-windows
           git clone https://github.com/FDH2/UxPlay && cd UxPlay
