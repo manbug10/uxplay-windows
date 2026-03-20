@@ -1,48 +1,22 @@
 ```
-# CI/CD
-.github/
-
-# Logs and temp files
-*.log
-*.tmp
-
-# Environment
-.env
-.env.local
-*.env.*
-
-# Dependencies
-node_modules/
-.venv/
-venv/
-__pycache__/
-.mypy_cache/
-.pytest_cache/
-coverage/
-htmlcov/
-.coverage
-
 # Build artifacts
-dist/
-build/
-target/
-*.pyc
-*.class
-*.o
-*.exe
-*.dll
-*.so
-*.a
-*.obj
-*.out
+*.vcxproj.user
+*.vcxproj.filters
+*.sln
+*.suo
+*.user
+*.userosscache
+*.sdf
+*.opensdf
+*.pidb
+*.log
+*.VC.db
+*.VC.VC.opendb
 
-# Editors
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# System
-.DS_Store
-Thumbs.db
+# Output directories
+Debug/
+Release/
+x64/
+bin/
+obj/
 ```
