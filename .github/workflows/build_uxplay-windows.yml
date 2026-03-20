@@ -57,18 +57,22 @@ jobs:
             mingw-w64-x86_64-gst-plugins-good
             mingw-w64-x86_64-gst-plugins-bad
 
+      - name: detect UxPlay version
+        run: |
+          # Clone temporarily to get the latest tag
+          git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src-temp
+          $version = git -C UxPlay-src-temp describe --tags --always --abbrev=0
+          if ($version -match '^v') {
+            $version = $version.Substring(1)
+          }
+          echo "UXPLAY_VERSION=$version" >> $env:GITHUB_ENV
+          echo "Detected UxPlay version: $version"
+          Remove-Item -Recurse -Force UxPlay-src-temp
+        shell: pwsh
+
       - name: compiling uxplay (finally)
         shell: msys2 {0}
         run: |
-          # Get the latest version tag from the UxPlay repository
-          cd /tmp
-          git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src
-          UXPLAY_VERSION=$(cd UxPlay-src && git describe --tags --always --abbrev=0 2>/dev/null || echo "1.73.5")
-          # Remove 'v' prefix if present for cleaner version string
-          UXPLAY_VERSION=$(echo $UXPLAY_VERSION | sed 's/^v//')
-          echo "UXPLAY_VERSION=$UXPLAY_VERSION" >> $GITHUB_ENV
-          echo "Detected UxPlay version: $UXPLAY_VERSION"
-          
           cd /d/a/uxplay-windows/uxplay-windows
           git clone https://github.com/FDH2/UxPlay && cd UxPlay
           mkdir build && cd build
