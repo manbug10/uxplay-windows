@@ -57,9 +57,23 @@ jobs:
             mingw-w64-x86_64-gst-plugins-good
             mingw-w64-x86_64-gst-plugins-bad
 
+      - name: detect UxPlay version
+        run: |
+          # Clone temporarily to get the latest tag
+          git clone --depth 1 https://github.com/FDH2/UxPlay UxPlay-src-temp
+          $version = git -C UxPlay-src-temp describe --tags --always --abbrev=0
+          if ($version -match '^v') {
+            $version = $version.Substring(1)
+          }
+          echo "UXPLAY_VERSION=$version" >> $env:GITHUB_ENV
+          echo "Detected UxPlay version: $version"
+          Remove-Item -Recurse -Force UxPlay-src-temp
+        shell: pwsh
+
       - name: compiling uxplay (finally)
         shell: msys2 {0}
         run: |
+          cd /d/a/uxplay-windows/uxplay-windows
           git clone https://github.com/FDH2/UxPlay && cd UxPlay
           mkdir build && cd build
           cmake ..
@@ -135,7 +149,24 @@ jobs:
           cp D:\a\uxplay-windows\uxplay-windows\icon.ico D:\a\uxplay-windows\uxplay-windows\dist\uxplay-windows\_internal
           
       - name: compile the installer with inno setup
-        run: .$(Join-Path -Path ${env:PROGRAMFILES(X86)} -ChildPath 'Inno Setup 6\\ISCC.exe') $(Join-Path -Path $(Get-Location) -ChildPath "script.iss")
+        run: |
+          $isccPath = Join-Path ${env:PROGRAMFILES(X86)} 'Inno Setup 6\ISCC.exe'
+          $issFile = Join-Path $(Get-Location) "script.iss"
+          $version = $env:UXPLAY_VERSION
+          
+          if ([string]::IsNullOrEmpty($version)) {
+            Write-Host "Warning: UXPLAY_VERSION is not set, using default version"
+            & $isccPath $issFile
+          } else {
+            Write-Host "Compiling installer with version: $version"
+            & $isccPath /DUXPLAY_VERSION="$version" $issFile
+          }
+          
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Inno Setup compilation failed with exit code $LASTEXITCODE"
+            exit 1
+          }
+        shell: pwsh
         
       - name: uploading artifact
         uses: actions/upload-artifact@v4
